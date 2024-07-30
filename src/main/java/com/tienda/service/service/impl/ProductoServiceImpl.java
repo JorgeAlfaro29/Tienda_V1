@@ -9,6 +9,7 @@ import com.tienda.domain.Producto;
 import com.tienda.service.ProductoService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,26 +32,41 @@ public class ProductoServiceImpl implements ProductoService {
         }
         return lista;
     }
-    
+
     @Override
     @Transactional(readOnly = true)
-    public Producto getProducto(Producto producto){
+    public Producto getProducto(Producto producto) {
         return productoDao.findById(producto.getIdProducto()).orElse(null);
     }
-    
+
     @Override
     @Transactional
-    public void delete(Producto producto){
+    public void delete(Producto producto) {
         productoDao.delete(producto);
     }
-    
+
     @Override
     @Transactional
-    public void save(Producto producto){
-         productoDao.save(producto);//guardar o modificar el id
+    public void save(Producto producto) {
+        productoDao.save(producto);//guardar o modificar el id
     }
 
-    
+    @Override
+    @Transactional(readOnly = true)
+    public List<Producto> findByPrecioBetweenOrderByDescripcion(double precioInf, double precioSup) {
+        return productoDao.findByPrecioBetweenOrderByDescripcion(precioInf, precioSup);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Producto> metodoJPQL(@Param("precioInf") double precioInf, @Param("precioSup") double precioSup) {
+        return productoDao.metodoJPQL(precioInf, precioSup);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Producto> metodoNativo(@Param("precioInf") double precioInf, @Param("precioSup") double precioSup) {
+        return productoDao.metodoNativo(precioInf, precioSup);
+    }
+
 }
-
-
